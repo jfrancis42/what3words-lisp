@@ -12,7 +12,8 @@ times when doing API stuff."
 (defun words-to-loc (api-key words &key (lang "en") (display "full") debug)
   "Given an API key and a word location (like
 'armchairs.reduced.flannel'), return information about that location
-as a JSON blob."
+as a JSON blob. You may optionally specify the language and display
+data (see API docs for details)."
   (let ((uri
 	 (concatenate
 	  'string
@@ -32,7 +33,9 @@ as a JSON blob."
   
 (defun loc-to-words (api-key lat lon &key (lang "en") (display "full") debug)
   "Given an API key and a floating point latitude and longitude,
-return a set of words that map that location as a JSON blob."
+return a set of words that map that location as a JSON blob. You may
+optionally specify the language and display data (see API docs for
+details)."
   (let ((uri
 	 (concatenate
 	  'string
@@ -57,6 +60,8 @@ return a set of words that map that location as a JSON blob."
 				   clip-ne-lat clip-ne-lon
 				   clip-sw-lat clip-sw-lon
 				   debug)
+  "Given a valid API keyword, returns a list of 3 word addresses based
+on user input and other parameters. See API docs for more details."
   (let* ((language (if (and (not ml) (not lang)) "en" lang))
 	 (uri
 	  (concatenate
@@ -88,6 +93,9 @@ return a set of words that map that location as a JSON blob."
 		    :method :get))))))
 
 (defun standardblend (api-key addr &key lang ml focus-lat focus-lon debug)
+  "Given a valid API key, returns a blend of the three most relevant 3
+word address candidates for a given location, based on a full or
+partial 3 word address. See API docs for more details."
   (let* ((language (if (and (not ml) (not lang)) "en" lang))
 	 (uri
 	  (concatenate
@@ -108,6 +116,8 @@ return a set of words that map that location as a JSON blob."
 		    :method :get))))))
 
 (defun grid (api-key ne-lat ne-lon sw-lat sw-lon &key debug)
+  "Given a valid API key and a bounding box, return a list of words
+describing the locations in the box."
   (let ((uri
 	 (format nil "https://api.what3words.com/v2/grid?key=~A&bbox=~A,~A,~A,~A"
 		 api-key ne-lat ne-lon sw-lat sw-lon)))
@@ -122,6 +132,7 @@ return a set of words that map that location as a JSON blob."
 		  :method :get))))))
 
 (defun get-languages (api-key &key debug)
+  "Given a valid API key, return a list of supported languages."
   (let ((uri 
 	 (concatenate
 	  'string
